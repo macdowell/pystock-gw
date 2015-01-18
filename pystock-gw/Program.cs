@@ -17,18 +17,20 @@ namespace PyStock
             using(Gateway gateway = new Gateway("tcp://*:5555", "tcp://*:5556", 10))
             {
                 gateway.Start();
-                /*
-                            Console.CancelKeyPress += (sender, e) =>
-                            {
-                                e.Cancel = true;
-                                gateway.Stop();
-                            };
-                */
-                Console.ReadLine();
+                ManualResetEvent resetEvent = new ManualResetEvent(false);
+
+                Console.CancelKeyPress += (sender, e) =>
+                {
+                    e.Cancel = true;
+                    resetEvent.Set();
+                };
+
+                Console.WriteLine("Press Ctrl + C to stop...");
+                
+                resetEvent.WaitOne();
                 gateway.Stop();
 
-                gateway.WaitTerminate();
-                Console.WriteLine("The program ended. Press ENTER to exit...");
+                Console.WriteLine("Press ENTER to exit...");
                 Console.ReadLine();
             }
         }
