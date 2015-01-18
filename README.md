@@ -1,1 +1,1 @@
-# pystock-smartgw
+# pystock-gw
